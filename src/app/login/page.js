@@ -5,8 +5,7 @@ import { loginFormControls } from "@/utils";
 import { useRouter } from "next/navigation";
 
 export default function Login() {
-
-  const router = useRouter()
+  const router = useRouter();
   return (
     <div className="relative">
       <div className="flex flex-col items-center justify-between pt-0 pr-10 pb-0 pl-10 mt-8 mr-auto xl:px-5 lg:flex-row">
@@ -31,8 +30,9 @@ export default function Login() {
                 </button>
                 <div className="flex flex-col gap-2">
                   <p>New to website ?</p>
-                  <button className="inline-flex w-full items-center justify-center bg-black px-6 py-4 text-lg text-white transition-all duration-200 ease-in-out focus:shadow font-medium tracking-wide rounded-md hover:bg-gray-700"
-                    onClick={()=> router.push('/register')}
+                  <button
+                    className="inline-flex w-full items-center justify-center bg-black px-6 py-4 text-lg text-white transition-all duration-200 ease-in-out focus:shadow font-medium tracking-wide rounded-md hover:bg-gray-700"
+                    onClick={() => router.push("/register")}
                   >
                     Register
                   </button>
