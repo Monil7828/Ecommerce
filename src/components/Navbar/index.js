@@ -1,7 +1,7 @@
 "use client";
 
 import { GlobalContext } from "@/context";
-import { adminNavOptions, navOptions, styles } from "@/utils";
+import { adminNavOptions, navOptions } from "@/utils";
 import { Fragment, useContext } from "react";
 import CommonModal from "../CommonModal";
 
@@ -47,7 +47,7 @@ export default function Navbar() {
 
   return (
     <>
-      <nav className="bg-slate-400 shadow-md fixed w-full z-20 top-0 left-0 border-b border-gray-200">
+      <nav className="bg-slate-400 shadow-lg fixed w-full z-20 top-0 left-0 border-b border-slate-200">
         <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4 text-black">
           <div className="flex  items-center cursor-pointer">
             <span className="self-center text-3xl font-bold underline text-slate-700 whitespace-nowrap">
@@ -60,20 +60,20 @@ export default function Navbar() {
                 <button className="mt-1.5 inline-block bg-black px-5 py-3 text-xs font-medium upprcase tracking-wide text-white hover:bg-gray-700">
                   Account
                 </button>
-                <button className={styles.button}>Cart</button>
+                <button className="mt-1.5 inline-block bg-black px-5 py-3 text-xs font-medium upprcase tracking-wide text-white hover:bg-gray-700">Cart</button>
               </Fragment>
             ) : null}
             {user?.role === "admin" ? (
               isAdminView ? (
-                <button className={styles.button}>Client view</button>
+                <button className="mt-1.5 inline-block bg-black px-5 py-3 text-xs font-medium upprcase tracking-wide text-white hover:bg-gray-700">Client view</button>
               ) : (
-                <button className={styles.button}>Admin view</button>
+                <button className="mt-1.5 inline-block bg-black px-5 py-3 text-xs font-medium upprcase tracking-wide text-white hover:bg-gray-700">Admin view</button>
               )
             ) : null}
             {isAuthUser ? (
-              <button className={styles.button}>Logout</button>
+              <button className="mt-1.5 inline-block bg-black px-5 py-3 text-xs font-medium upprcase tracking-wide text-white hover:bg-gray-700">Logout</button>
             ) : (
-              <button className={styles.button}>Login</button>
+              <button className="mt-1.5 inline-block bg-black px-5 py-3 text-xs font-medium upprcase tracking-wide text-white hover:bg-gray-700">Login</button>
             )}
             <button
               data-collapse-toggle="navbar-sticky"
