@@ -189,17 +189,18 @@ export const AvailableSizes = [
 ];
 
 export const firebaseConfig = {
-  apiKey: "AIzaSyDjOlusv15qlabAH0EMHATcHo_aw0imJaU",
-  authDomain: "ecommerce-cb1f9.firebaseapp.com",
-  projectId: "ecommerce-cb1f9",
-  storageBucket: "ecommerce-cb1f9.appspot.com",
-  messagingSenderId: "373871933288",
-  appId: "1:373871933288:web:3ad794818f7b615b8248dd",
-  measurementId: "G-CDF54928R0"
+  apiKey: "AIzaSyDbUfeHZlvYxTrH5bkUat5Z7-6_W0Vu6gA",
+  authDomain: "sparkal-a4be9.firebaseapp.com",
+  projectId: "sparkal-a4be9",
+  storageBucket: "sparkal-a4be9.appspot.com",
+  messagingSenderId: "1007662052622",
+  appId: "1:1007662052622:web:ef845a91707e4a68ec935f",
+  measurementId: "G-5VG0SEL4C3"
 };
 
+
 export const firebaseStroageURL =
-  "gs://ecommerce-cb1f9.appspot.com";
+  "gs://sparkal-a4be9.appspot.com";
 
 export const addNewAddressFormControls = [
   {

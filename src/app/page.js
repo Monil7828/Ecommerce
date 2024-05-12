@@ -34,8 +34,8 @@ export default function Home() {
               Best Fashion Collection
             </h1>
             <p className="max-w-2xl mb-6 font-light text-gray-500 lg:mb-8 md:text-lg lg:text-xl">
-              Quisquemos sodales suscipit tortor ditaemcos condimentum de cosmo
-              lacus meleifend menean diverra loremous.
+            Elevate your style with our timeless elegance and modern flair. 
+            Discover premium quality and effortless sophistication in every piece.
             </p>
 
             <button
@@ -59,7 +59,7 @@ export default function Home() {
               <div className="max-w-md mx-auto text-center lg:text-left">
                 <div>
                   <h2 className="text-xl font-bold text-gray-900 sm:text-3xl">
-                  Christmas Sale Collection
+                  Summer Sale Collection
                   </h2>
                 </div>
                 <button
@@ -117,7 +117,7 @@ export default function Home() {
             <li>
               <div className="relative block group">
                 <img
-                  src="https://image.uniqlo.com/UQ/ST3/in/imagesgoods/461807/item/ingoods_69_461807.jpg?width=494"
+                  src="https://images.pexels.com/photos/1620760/pexels-photo-1620760.jpeg?cs=srgb&dl=pexels-vika-glitter-392079-1620760.jpg&fm=jpg"
                   className="object-cover w-full aspect-square"
                 />
                 <div className="absolute inset-0 flex flex-col items-start justify-end p-6">
