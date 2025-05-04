@@ -4,11 +4,14 @@ import { GlobalContext } from "@/context";
 import { getAllAdminProducts } from "@/services/product";
 import { useRouter } from "next/navigation";
 import { useContext, useEffect, useState } from "react";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { PulseLoader } from "react-spinners";
 
 export default function Home() {
   const { isAuthUser } = useContext(GlobalContext);
-
   const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(false);
   const router = useRouter();
 
   async function getListOfProducts() {
@@ -23,7 +26,49 @@ export default function Home() {
     getListOfProducts();
   }, []);
 
-  console.log(products);
+  const handleButtonClick = (path) => {
+    if (!isAuthUser) {
+      toast.warning("Please login first to access this page", {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+      return;
+    }
+    
+    setLoading(true);
+    router.push(path);
+  };
+
+  const handleProductClick = (path) => {
+    if (!isAuthUser) {
+      toast.warning("Please login first to view product details", {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+      return;
+    }
+    
+    setLoading(true);
+    router.push(path);
+  };
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen bg-slate-200">
+        <PulseLoader color="#000000" size={15} />
+      </div>
+    );
+  }
 
   return (
     <main className="flex bg-slate-200 min-h-screen flex-col items-center justify-between">
@@ -34,13 +79,13 @@ export default function Home() {
               Best Fashion Collection
             </h1>
             <p className="max-w-2xl mb-6 font-light text-gray-500 lg:mb-8 md:text-lg lg:text-xl">
-            Elevate your style with our timeless elegance and modern flair. 
-            Discover premium quality and effortless sophistication in every piece.
+              Elevate your style with our timeless elegance and modern flair. 
+              Discover premium quality and effortless sophistication in every piece.
             </p>
 
             <button
               type="button"
-              onClick={() => router.push("/product/listing/all-products")}
+              onClick={() => handleButtonClick("/product/listing/all-products")}
               className="mt-1.5 inline-block bg-black px-5 py-3 text-xs font-medium uppercase tracking-wide text-white"
             >
               Explore Shop Collection
@@ -59,11 +104,11 @@ export default function Home() {
               <div className="max-w-md mx-auto text-center lg:text-left">
                 <div>
                   <h2 className="text-xl font-bold text-gray-900 sm:text-3xl">
-                  Summer Sale Collection
+                    Summer Sale Collection
                   </h2>
                 </div>
                 <button
-                  onClick={() => router.push("/product/listing/all-products")}
+                  onClick={() => handleButtonClick("/product/listing/all-products")}
                   className="mt-1.5 inline-block bg-black px-5 py-3 text-xs font-medium uppercase tracking-wide text-white"
                 >
                   Shop ALL
@@ -79,7 +124,7 @@ export default function Home() {
                       .map((productItem) => (
                         <li
                           onClick={() =>
-                            router.push(`/product/${productItem._id}`)
+                            handleProductClick(`/product/${productItem._id}`)
                           }
                           className="cursor-pointer"
                           key={productItem._id}
@@ -123,7 +168,7 @@ export default function Home() {
                 <div className="absolute inset-0 flex flex-col items-start justify-end p-6">
                   <h3 className="text-xl font-medium text-white">KIDS</h3>
                   <button
-                    onClick={() => router.push("/product/listing/kids")}
+                    onClick={() => handleButtonClick("/product/listing/kids")}
                     className="mt-1.5 inline-block bg-black px-5 py-3 text-xs font-medium uppercase tracking-wide text-white"
                   >
                     Shop Now
@@ -140,7 +185,7 @@ export default function Home() {
                 <div className="absolute inset-0 flex flex-col items-start justify-end p-6">
                   <h3 className="text-xl font-medium text-white">WOMEN</h3>
                   <button
-                    onClick={() => router.push("/product/listing/women")}
+                    onClick={() => handleButtonClick("/product/listing/women")}
                     className="mt-1.5 inline-block bg-black px-5 py-3 text-xs font-medium uppercase tracking-wide text-white"
                   >
                     Shop Now
@@ -157,7 +202,7 @@ export default function Home() {
                 <div className="absolute inset-0 flex flex-col items-start justify-end p-6">
                   <h3 className="text-xl font-medium text-gray-300">MEN</h3>
                   <button
-                    onClick={() => router.push("/product/listing/men")}
+                    onClick={() => handleButtonClick("/product/listing/men")}
                     className="mt-1.5 inline-block bg-black px-5 py-3 text-xs font-medium uppercase tracking-wide text-white"
                   >
                     Shop Now
