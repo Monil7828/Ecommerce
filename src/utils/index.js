@@ -5,6 +5,11 @@ export const navOptions = [
     path: "/",
   },
   {
+    id: "listingSales",
+    label: "Sales",
+    path: "/product/listing/sales",
+  },
+  {
     id: "listing",
     label: "All Products",
     path: "/product/listing/all-products",

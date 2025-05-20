@@ -21,11 +21,9 @@ const initialFormData = {
 export default function Register() {
   const [formData, setFormData] = useState(initialFormData);
   const [isRegistered, setIsRegistered] = useState(false);
-  const { pageLevelLoader, setPageLevelLoader , isAuthUser } = useContext(GlobalContext);
+  const { componentLevelLoader, setComponentLevelLoader, isAuthUser } = useContext(GlobalContext);
 
-  const router = useRouter()
-
-  console.log(formData);
+  const router = useRouter();
 
   function isFormValid() {
     return formData &&
@@ -39,10 +37,8 @@ export default function Register() {
       : false;
   }
 
-  console.log(isFormValid());
-
   async function handleRegisterOnSubmit() {
-    setPageLevelLoader(true);
+    setComponentLevelLoader({ loading: true, id: "" });
     const data = await registerNewUser(formData);
 
     if (data.success) {
@@ -50,17 +46,15 @@ export default function Register() {
         position: toast.POSITION.TOP_RIGHT,
       });
       setIsRegistered(true);
-      setPageLevelLoader(false);
+      setComponentLevelLoader({ loading: false, id: "" });
       setFormData(initialFormData);
     } else {
       toast.error(data.message, {
         position: toast.POSITION.TOP_RIGHT,
       });
-      setPageLevelLoader(false);
+      setComponentLevelLoader({ loading: false, id: "" });
       setFormData(initialFormData);
     }
-
-    console.log(data);
   }
 
   useEffect(() => {
@@ -75,23 +69,23 @@ export default function Register() {
             <div className="flex flex-col items-center justify-start pt-10 pr-10 pb-10 pl-10 bg-slate-300 shadow-2xl rounded-xl relative z-10">
               <p className="w-full text-gray-600 text-4xl font-medium text-center font-serif">
                 {isRegistered
-                  ? "Registration Successfull !"
-                  : "Sign up for an account"}
+                  ? "Registration Successful!"
+                  : "Create an account"}
               </p>
               {isRegistered ? (
                 <button
                   className="inline-flex w-full items-center justify-center bg-black px-6 py-4 text-lg 
-                text-white transition-all duration-200 ease-in-out focus:shadow font-medium uppercase tracking-wide
-                "
-                onClick={()=>router.push('/login')}
+                text-white transition-all duration-200 ease-in-out focus:shadow font-medium uppercase tracking-wide"
+                  onClick={() => router.push('/login')}
                 >
                   Login
                 </button>
               ) : (
-                <div className="w-full mt-6 mr-0 mb-0 ml-0 relative text-gray-600 space-y-8">
+                <div className="w-full mt-6 mr-0 mb-0 ml-0 relative text-gray-500 space-y-8">
                   {registrationFormControls.map((controlItem) =>
                     controlItem.componentType === "input" ? (
                       <InputComponent
+                        key={controlItem.id}
                         type={controlItem.type}
                         placeholder={controlItem.placeholder}
                         label={controlItem.label}
@@ -105,6 +99,7 @@ export default function Register() {
                       />
                     ) : controlItem.componentType === "select" ? (
                       <SelectComponent
+                        key={controlItem.id}
                         options={controlItem.options}
                         label={controlItem.label}
                         onChange={(event) => {
@@ -118,22 +113,30 @@ export default function Register() {
                     ) : null
                   )}
                   <button
-                    className=" disabled:opacity-50 inline-flex w-full items-center justify-center bg-black px-6 py-4 text-lg 
-                   text-white transition-all duration-200 ease-in-out focus:shadow font-medium uppercase tracking-wide
-                   "
-                    disabled={!isFormValid()}
+                    className="disabled:opacity-50 inline-flex w-full items-center justify-center bg-black px-6 py-4 text-lg 
+                   text-white transition-all duration-200 ease-in-out focus:shadow font-medium uppercase tracking-wide"
+                    disabled={!isFormValid() || (componentLevelLoader && componentLevelLoader.loading)}
                     onClick={handleRegisterOnSubmit}
                   >
-                    {pageLevelLoader ? (
+                    {(componentLevelLoader && componentLevelLoader.loading) ? (
                       <ComponentLevelLoader
                         text={"Registering"}
                         color={"#ffffff"}
-                        loading={pageLevelLoader}
+                        loading={componentLevelLoader && componentLevelLoader.loading}
                       />
                     ) : (
                       "Register"
                     )}
                   </button>
+                  <div className="flex flex-col gap-2">
+                    <p>Already have an account?</p>
+                    <button
+                      className="inline-flex w-full items-center justify-center bg-black px-6 py-4 text-lg text-white transition-all duration-200 ease-in-out focus:shadow font-medium uppercase tracking-wide"
+                      onClick={() => router.push("/login")}
+                    >
+                      Login
+                    </button>
+                  </div>
                 </div>
               )}
             </div>
