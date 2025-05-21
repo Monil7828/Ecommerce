@@ -11,7 +11,7 @@ export const navOptions = [
   },
   {
     id: "listing",
-    label: "All Products",
+    label: "Collection",
     path: "/product/listing/all-products",
   },
   {

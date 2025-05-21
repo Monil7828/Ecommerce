@@ -62,7 +62,7 @@ export default function Home() {
   return (
     <main className="min-h-screen bg-gray-50">
       {/* Hero Section */}
-      <section className="relative bg-gradient-to-r from-blue-50 to-indigo-50 py-12 md:py-24 overflow-hidden">
+      <section className="relative bg-gradient-to-r h-full from-blue-50 to-indigo-50 py-12 md:py-24 overflow-hidden">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center">
           <div className="md:w-1/2 mb-8 md:mb-0 md:pr-10 lg:pr-16 relative z-10">
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 leading-tight mb-4">

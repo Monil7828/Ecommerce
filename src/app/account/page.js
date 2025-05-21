@@ -15,6 +15,7 @@ import { useRouter } from "next/navigation";
 import { useContext, useEffect, useState } from "react";
 import { PulseLoader } from "react-spinners";
 import { toast } from "react-toastify";
+import Cookies from "js-cookie";
 
 export default function Account() {
   const {
@@ -27,11 +28,13 @@ export default function Account() {
     setComponentLevelLoader,
     pageLevelLoader,
     setPageLevelLoader,
+    setIsAuthUser,
+    setUser
   } = useContext(GlobalContext);
 
   const [showAddressForm, setShowAddressForm] = useState(false);
   const [currentEditedAddressId, setCurrentEditedAddressId] = useState(null);
-  const router = useRouter()
+  const router = useRouter();
 
   async function extractAllAddresses() {
     setPageLevelLoader(true);
@@ -39,7 +42,6 @@ export default function Account() {
 
     if (res.success) {
       setPageLevelLoader(false);
-
       setAddresses(res.data);
     }
   }
@@ -54,13 +56,9 @@ export default function Account() {
           })
         : await addNewAddress({ ...addressFormData, userID: user?._id });
 
-    console.log(res);
-
     if (res.success) {
       setComponentLevelLoader({ loading: false, id: "" });
-      toast.success(res.message, {
-        position: toast.POSITION.TOP_RIGHT,
-      });
+      toast.success(res.message);
       setAddressFormData({
         fullName: "",
         city: "",
@@ -72,9 +70,7 @@ export default function Account() {
       setCurrentEditedAddressId(null);
     } else {
       setComponentLevelLoader({ loading: false, id: "" });
-      toast.error(res.message, {
-        position: toast.POSITION.TOP_RIGHT,
-      });
+      toast.error(res.message);
       setAddressFormData({
         fullName: "",
         city: "",
@@ -104,107 +100,138 @@ export default function Account() {
 
     if (res.success) {
       setComponentLevelLoader({ loading: false, id: "" });
-
-      toast.success(res.message, {
-        position: toast.POSITION.TOP_RIGHT,
-      });
+      toast.success(res.message);
       extractAllAddresses();
     } else {
       setComponentLevelLoader({ loading: false, id: "" });
-
-      toast.error(res.message, {
-        position: toast.POSITION.TOP_RIGHT,
-      });
+      toast.error(res.message);
     }
   }
+
+  const handleLogout = async () => {
+    setIsAuthUser(false);
+    setUser(null);
+    Cookies.remove("token");
+    localStorage.clear();
+    router.push("/");
+  };
 
   useEffect(() => {
     if (user !== null) extractAllAddresses();
   }, [user]);
 
   return (
-    <section>
-      <div className="mx-auto bg-slate-200 px-4 sm:px-6 lg:px-8">
-        <div className="bg-slate-300 shadow-md">
-          <div className="text-black p-6 sm:p-12">
-            <div className="flex flex-col space-y-4 md:space-y-0 md:space-x-6 md:flex-row">
-              {/* we have render random user image here */}
+    <section className="min-h-screen bg-gradient-to-b from-indigo-50 to-white">
+      <div className="container mx-auto px-4 py-20">
+        {/* Profile Card */}
+        <div className="bg-white rounded-xl shadow-lg overflow-hidden max-w-4xl mx-auto">
+          {/* Profile Header */}
+          <div className="bg-indigo-600 p-6 text-white">
+            <div className="flex flex-col md:flex-row items-center">
+              <div className="w-24 h-24 rounded-full bg-white flex items-center justify-center mb-4 md:mb-0 md:mr-6">
+                <span className="text-3xl font-bold text-indigo-600">
+                  {user?.name.charAt(0).toUpperCase()}
+                </span>
+              </div>
+              <div className="text-center md:text-left">
+                <h1 className="text-2xl font-bold">{user?.name}</h1>
+                <p className="text-indigo-100">{user?.email}</p>
+                <p className="mt-2 px-3 py-1 bg-indigo-700 rounded-full text-xs inline-block">
+                  {user?.role.toUpperCase()}
+                </p>
+              </div>
             </div>
-            <div className="flex flex-col flex-1">
-              <h4 className="text-lg font-semibold text-center md:text-left">
-                Name: {user?.name}
-              </h4>
-              <p>Email: {user?.email}</p>
-              <p>Role: {user?.role}</p>
+          </div>
+
+          {/* Profile Content */}
+          <div className="p-6">
+            {/* Action Buttons */}
+            <div className="flex flex-wrap gap-4 mb-8">
+              <button
+                onClick={() => router.push('/orders')}
+                className="flex-1 min-w-[200px] bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-3 rounded-lg transition-all flex items-center justify-center"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                </svg>
+                View Your Orders
+              </button>
+              
+              <button
+                onClick={handleLogout}
+                className="flex-1 min-w-[200px] bg-gray-200 hover:bg-gray-300 text-gray-800 px-6 py-3 rounded-lg transition-all flex items-center justify-center"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                </svg>
+                Logout
+              </button>
             </div>
-            <button onClick={()=>router.push('/orders')} className="mt-5  inline-block bg-black text-white px-5 py-3 text-xs font-medium uppercase tracking-wide">
-              View Your Orders
-            </button>
-            <div className="mt-6">
-              <h1 className="font-bold text-lg">Your Addresses :</h1>
+
+            {/* Address Section */}
+            <div className="mb-8">
+              <div className="flex justify-between items-center mb-4">
+                <h2 className="text-xl font-semibold text-gray-800">Your Addresses</h2>
+                <button
+                  onClick={() => setShowAddressForm(!showAddressForm)}
+                  className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors"
+                >
+                  {showAddressForm ? "Hide Form" : "Add New Address"}
+                </button>
+              </div>
+
               {pageLevelLoader ? (
-                <PulseLoader
-                  color={"#000000"}
-                  loading={pageLevelLoader}
-                  size={15}
-                  data-testid="loader"
-                />
+                <div className="flex justify-center py-8">
+                  <PulseLoader color="#6366f1" size={15} />
+                </div>
               ) : (
-                <div className="mt-4 flex flex-col gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   {addresses && addresses.length ? (
                     addresses.map((item) => (
-                      <div className="border p-6" key={item._id}>
-                        <p>Name : {item.fullName}</p>
-                        <p>Address : {item.address}</p>
-                        <p>City : {item.city}</p>
-                        <p>Country : {item.country}</p>
-                        <p>PostalCode : {item.postalCode}</p>
-                        <button
-                          onClick={() => handleUpdateAddress(item)}
-                          className="mt-5 mr-5 inline-block bg-black text-white px-5 py-3 text-xs font-medium uppercase tracking-wide"
-                        >
-                          Update
-                        </button>
-                        <button
-                          onClick={() => handleDelete(item._id)}
-                          className="mt-5  inline-block bg-black text-white px-5 py-3 text-xs font-medium uppercase tracking-wide"
-                        >
-                          {componentLevelLoader &&
-                          componentLevelLoader.loading &&
-                          componentLevelLoader.id === item._id ? (
-                            <ComponentLevelLoader
-                              text={"Deleting"}
-                              color={"#ffffff"}
-                              loading={
-                                componentLevelLoader &&
-                                componentLevelLoader.loading
-                              }
-                            />
-                          ) : (
-                            "Delete"
-                          )}
-                        </button>
+                      <div key={item._id} className="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow">
+                        <div className="space-y-2">
+                          <p className="font-medium">{item.fullName}</p>
+                          <p className="text-gray-600">{item.address}</p>
+                          <p className="text-gray-600">{item.city}, {item.postalCode}</p>
+                          <p className="text-gray-600">{item.country}</p>
+                        </div>
+                        <div className="mt-4 flex gap-2">
+                          <button
+                            onClick={() => handleUpdateAddress(item)}
+                            className="px-3 py-1 bg-indigo-100 text-indigo-700 rounded hover:bg-indigo-200 transition-colors text-sm"
+                          >
+                            Update
+                          </button>
+                          <button
+                            onClick={() => handleDelete(item._id)}
+                            className="px-3 py-1 bg-red-100 text-red-700 rounded hover:bg-red-200 transition-colors text-sm"
+                          >
+                            {componentLevelLoader?.loading && componentLevelLoader.id === item._id ? (
+                              <PulseLoader color="#dc2626" size={8} />
+                            ) : "Delete"}
+                          </button>
+                        </div>
                       </div>
                     ))
                   ) : (
-                    <p>No address found ! Please add a new address below</p>
+                    <div className="col-span-2 py-6 text-center text-gray-500">
+                      No addresses found. Please add a new address.
+                    </div>
                   )}
                 </div>
               )}
             </div>
-            <div className="mt-4">
-              <button
-                onClick={() => setShowAddressForm(!showAddressForm)}
-                className="mt-5  inline-block bg-black text-white px-5 py-3 text-xs font-medium uppercase tracking-wide"
-              >
-                {showAddressForm ? "Hide Address Form" : "Add New Address"}
-              </button>
-            </div>
-            {showAddressForm ? (
-              <div className="flex flex-col mt-5 justify-center pt-4 items-center">
-                <div className="w-full mt-6 mr-0 mb-0 ml-0 space-y-8">
+
+            {/* Address Form */}
+            {showAddressForm && (
+              <div className="bg-gray-50 p-6 rounded-lg">
+                <h3 className="text-lg font-medium mb-4">
+                  {currentEditedAddressId ? "Update Address" : "Add New Address"}
+                </h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   {addNewAddressFormControls.map((controlItem) => (
                     <InputComponent
+                      key={controlItem.id}
                       type={controlItem.type}
                       placeholder={controlItem.placeholder}
                       label={controlItem.label}
@@ -218,24 +245,34 @@ export default function Account() {
                     />
                   ))}
                 </div>
-                <button
-                  onClick={handleAddOrUpdateAddress}
-                  className="mt-5  inline-block bg-black text-white px-5 py-3 text-xs font-medium uppercase tracking-wide"
-                >
-                  {componentLevelLoader && componentLevelLoader.loading ? (
-                    <ComponentLevelLoader
-                      text={"Saving"}
-                      color={"#ffffff"}
-                      loading={
-                        componentLevelLoader && componentLevelLoader.loading
-                      }
-                    />
-                  ) : (
-                    "Save"
-                  )}
-                </button>
+                <div className="mt-6 flex justify-end gap-3">
+                  <button
+                    onClick={() => {
+                      setShowAddressForm(false);
+                      setCurrentEditedAddressId(null);
+                      setAddressFormData({
+                        fullName: "",
+                        city: "",
+                        country: "",
+                        postalCode: "",
+                        address: "",
+                      });
+                    }}
+                    className="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-100 transition-colors"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    onClick={handleAddOrUpdateAddress}
+                    className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors"
+                  >
+                    {componentLevelLoader?.loading ? (
+                      <PulseLoader color="#ffffff" size={8} />
+                    ) : currentEditedAddressId ? "Update Address" : "Save Address"}
+                  </button>
+                </div>
               </div>
-            ) : null}
+            )}
           </div>
         </div>
       </div>
