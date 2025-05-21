@@ -219,7 +219,7 @@ export default function Home() {
             ))}
           </div>
         </div>
-      </section>
+      </section>  
 
       {/* All Products Section */}
       <section className="py-12 bg-white">

@@ -28,15 +28,11 @@ export default function Checkout() {
   const router = useRouter();
   const params = useSearchParams();
 
-  const publishableKey =
-    "pk_test_51OQOEoSIs4efZtZKUhD2I1wA7lkdDKPF2zhXi3kVchlUvpsXHVRjUzRaDdqrliAn5AFYexJzfnpP57URvyQzUNvl00DidzARFd";
+  const publishableKey = "pk_test_51OQOEoSIs4efZtZKUhD2I1wA7lkdDKPF2zhXi3kVchlUvpsXHVRjUzRaDdqrliAn5AFYexJzfnpP57URvyQzUNvl00DidzARFd";
   const stripePromise = loadStripe(publishableKey);
-
-  console.log(cartItems);
 
   async function getAllAddresses() {
     const res = await fetchAllAddresses(user?._id);
-
     if (res.success) {
       setAddresses(res.data);
     }
@@ -49,17 +45,9 @@ export default function Checkout() {
   useEffect(() => {
     async function createFinalOrder() {
       const isStripe = JSON.parse(localStorage.getItem("stripe"));
-
-      if (
-        isStripe &&
-        params.get("status") === "success" &&
-        cartItems &&
-        cartItems.length > 0
-      ) {
+      if (isStripe && params.get("status") === "success" && cartItems?.length > 0) {
         setIsOrderProcessing(true);
-        const getCheckoutFormData = JSON.parse(
-          localStorage.getItem("checkoutFormData")
-        );
+        const getCheckoutFormData = JSON.parse(localStorage.getItem("checkoutFormData"));
 
         const createFinalCheckoutFormData = {
           user: user?._id,
@@ -69,44 +57,30 @@ export default function Checkout() {
             product: item.productID,
           })),
           paymentMethod: "Stripe",
-          totalPrice: cartItems.reduce(
-            (total, item) => item.productID.price + total,
-            0
-          ),
+          totalPrice: cartItems.reduce((total, item) => item.productID.price + total, 0),
           isPaid: true,
           isProcessing: true,
           paidAt: new Date(),
         };
 
         const res = await createNewOrder(createFinalCheckoutFormData);
-
         if (res.success) {
           setIsOrderProcessing(false);
           setOrderSuccess(true);
-          toast.success(res.message, {
-            position: toast.POSITION.TOP_RIGHT,
-          });
+          toast.success(res.message);
         } else {
           setIsOrderProcessing(false);
-          setOrderSuccess(false);
-          toast.error(res.message, {
-            position: toast.POSITION.TOP_RIGHT,
-          });
+          toast.error(res.message);
         }
       }
     }
-
     createFinalOrder();
   }, [params.get("status"), cartItems]);
 
   function handleSelectedAddress(getAddress) {
     if (getAddress._id === selectedAddress) {
       setSelectedAddress(null);
-      setCheckoutFormData({
-        ...checkoutFormData,
-        shippingAddress: {},
-      });
-
+      setCheckoutFormData({ ...checkoutFormData, shippingAddress: {} });
       return;
     }
 
@@ -126,7 +100,6 @@ export default function Checkout() {
 
   async function handleCheckout() {
     const stripe = await stripePromise;
-
     const createLineItems = cartItems.map((item) => ({
       price_data: {
         currency: "usd",
@@ -144,37 +117,29 @@ export default function Checkout() {
     localStorage.setItem("stripe", true);
     localStorage.setItem("checkoutFormData", JSON.stringify(checkoutFormData));
 
-    const { error } = await stripe.redirectToCheckout({
-      sessionId: res.id,
-    });
-
-    console.log(error);
+    const { error } = await stripe.redirectToCheckout({ sessionId: res.id });
+    if (error) console.error(error);
   }
-
-  console.log(checkoutFormData);
 
   useEffect(() => {
     if (orderSuccess) {
-      setTimeout(() => {
-        // setOrderSuccess(false);
-        router.push("/orders");
-      }, [2000]);
+      setTimeout(() => router.push("/orders"), 2000);
     }
   }, [orderSuccess]);
 
   if (orderSuccess) {
     return (
-      <section className="h-screen bg-slate-200">
-        <div className="mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="mx-auto mt-8 max-w-screen-xl px-4 sm:px-6 lg:px-8 ">
-            <div className="bg-slate-300 shadow-md">
-              <div className="px-4 py-6 sm:px-8 sm:py-10 flex flex-col gap-5">
-                <h1 className="font-bold text-gray-600 text-lg">
-                  Your payment is successfull and you will be redirected to
-                  orders page in 2 seconds !
-                </h1>
-              </div>
-            </div>
+      <section className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center">
+        <div className="bg-white rounded-2xl shadow-xl p-8 max-w-md w-full text-center">
+          <div className="w-20 h-20 bg-green-50 rounded-full flex items-center justify-center mx-auto mb-6">
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-10 w-10 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+            </svg>
+          </div>
+          <h1 className="text-2xl font-bold text-gray-800 mb-2">Payment Successful!</h1>
+          <p className="text-gray-600 mb-6">You'll be redirected to your orders shortly</p>
+          <div className="w-full bg-gray-100 rounded-full h-2.5">
+            <div className="bg-green-500 h-2.5 rounded-full animate-pulse" style={{width: '100%'}}></div>
           </div>
         </div>
       </section>
@@ -183,131 +148,141 @@ export default function Checkout() {
 
   if (isOrderProcessing) {
     return (
-      <div className="w-full min-h-screen flex justify-center items-center">
-        <PulseLoader
-          color={"#000000"}
-          loading={isOrderProcessing}
-          size={30}
-          data-testid="loader"
-        />
+      <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 flex flex-col items-center justify-center">
+        <PulseLoader color="#3b82f6" size={20} />
+        <p className="mt-4 text-gray-600">Processing your order...</p>
       </div>
     );
   }
 
   return (
-    <div>
-      <div className="grid  sm:px-10 lg:grid-cols-2 lg:px-20 xl:px-32">
-        <div className="px-4 pt-8">
-          <p className="font-medium text-gray-700 text-bold text-2xl">Cart Summary :</p>
-          <div className="mt-8 space-y-3 rounded-lg border text-gray-500 bg-slate-200 px-2 py-4 sm:px-5">
-            {cartItems && cartItems.length ? (
-              cartItems.map((item) => (
-                <div
-                  className="flex flex-col rounded-lg bg-slate-200 sm:flex-row"
-                  key={item._id}
-                >
-                  <img
-                    src={item && item.productID && item.productID.imageUrl}
-                    alt="Cart Item"
-                    className="m-2 h-24 w-28 rounded-md border object-cover object-center"
-                  />
-                  <div className="flex w-full flex-col px-4 py-4">
-                    <span className="font-bold">
-                      {item && item.productID && item.productID.name}
-                    </span>
-                    <span className="font-semibold">
-                      {item && item.productID && item.productID.price}
-                    </span>
+    <section className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 py-12">
+      <div className="container mx-auto px-4">
+        <h1 className="text-3xl font-bold text-gray-800 mb-8">Checkout</h1>
+        
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          {/* Cart Summary */}
+          <div className="bg-white rounded-xl shadow-md p-6">
+            <h2 className="text-xl font-semibold text-gray-800 mb-6">Your Order</h2>
+            <div className="space-y-4">
+              {cartItems?.length ? (
+                cartItems.map((item) => (
+                  <div key={item._id} className="flex items-center border-b border-gray-100 pb-4">
+                    <img
+                      src={item?.productID?.imageUrl}
+                      alt={item?.productID?.name}
+                      className="w-20 h-20 object-cover rounded-lg border border-gray-200"
+                    />
+                    <div className="ml-4 flex-1">
+                      <h3 className="font-medium text-gray-800">{item?.productID?.name}</h3>
+                      <p className="text-gray-600">${item?.productID?.price.toFixed(2)}</p>
+                    </div>
                   </div>
+                ))
+              ) : (
+                <div className="text-center py-8">
+                  <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+                    </svg>
+                  </div>
+                  <p className="text-gray-500">Your cart is empty</p>
                 </div>
-              ))
-            ) : (
-              <div>Your cart is empty</div>
+              )}
+            </div>
+
+            {cartItems?.length > 0 && (
+              <div className="mt-6 border-t border-gray-200 pt-4">
+                <div className="flex justify-between py-2">
+                  <span className="text-gray-600">Subtotal</span>
+                  <span className="font-medium">
+                    ${cartItems.reduce((total, item) => total + item.productID.price, 0).toFixed(2)}
+                  </span>
+                </div>
+                <div className="flex justify-between py-2">
+                  <span className="text-gray-600">Shipping</span>
+                  <span className="font-medium text-green-500">Free</span>
+                </div>
+                <div className="flex justify-between py-2 border-t border-gray-200 mt-2 pt-3">
+                  <span className="font-semibold text-gray-800">Total</span>
+                  <span className="font-bold text-gray-800 text-lg">
+                    ${cartItems.reduce((total, item) => total + item.productID.price, 0).toFixed(2)}
+                  </span>
+                </div>
+              </div>
             )}
           </div>
-        </div>
-        <div className="mt-10 bg-slate-300 shadow-md text-black px-4 pt-8 lg:mt-0">
-          <p className="text-xl text-bold font-medium">Shipping address details:</p>
-          <p className="text-gray-400 font-bold">
-            Complete your order by selecting address below
-          </p>
-          <div className="w-full mt-6 mr-0 mb-0 ml-0 space-y-6">
-            {addresses && addresses.length ? (
-              addresses.map((item) => (
-                <div
-                  onClick={() => handleSelectedAddress(item)}
-                  key={item._id}
-                  className={`border p-6 ${
-                    item._id === selectedAddress ? "border-red-900" : ""
-                  }`}
-                >
-                  <p>Name : {item.fullName}</p>
-                  <p>Address : {item.address}</p>
-                  <p>City : {item.city}</p>
-                  <p>Country : {item.country}</p>
-                  <p>PostalCode : {item.postalCode}</p>
-                  <button className="mt-5 mr-5 inline-block bg-black text-white px-5 py-3 text-xs font-medium uppercase tracking-wide hover:bg-gray-700">
-                    {item._id === selectedAddress
-                      ? "Selected Address"
-                      : "Select Address"}
+
+          {/* Shipping Address */}
+          <div className="bg-white rounded-xl shadow-md p-6">
+            <h2 className="text-xl font-semibold text-gray-800 mb-6">Shipping Address</h2>
+            
+            <div className="space-y-4 mb-6 max-h-[400px] overflow-y-auto pr-2">
+              {addresses?.length ? (
+                addresses.map((item) => (
+                  <div
+                    key={item._id}
+                    onClick={() => handleSelectedAddress(item)}
+                    className={`p-4 border rounded-lg cursor-pointer transition-all ${
+                      item._id === selectedAddress 
+                        ? "border-blue-500 bg-blue-50" 
+                        : "border-gray-200 hover:border-blue-300"
+                    }`}
+                  >
+                    <div className="flex items-start">
+                      <div className={`w-5 h-5 rounded-full border flex items-center justify-center mt-1 mr-3 ${
+                        item._id === selectedAddress 
+                          ? "bg-blue-500 border-blue-500" 
+                          : "border-gray-300"
+                      }`}>
+                        {item._id === selectedAddress && (
+                          <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3 text-white" viewBox="0 0 20 20" fill="currentColor">
+                            <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                          </svg>
+                        )}
+                      </div>
+                      <div>
+                        <h3 className="font-medium text-gray-800">{item.fullName}</h3>
+                        <p className="text-gray-600 text-sm">{item.address}</p>
+                        <p className="text-gray-600 text-sm">{item.city}, {item.postalCode}, {item.country}</p>
+                      </div>
+                    </div>
+                  </div>
+                ))
+              ) : (
+                <div className="text-center py-8">
+                  <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                    </svg>
+                  </div>
+                  <p className="text-gray-500 mb-4">No addresses saved</p>
+                  <button
+                    onClick={() => router.push("/account")}
+                    className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm"
+                  >
+                    Add New Address
                   </button>
                 </div>
-              ))
-            ) : (
-              <p>No addresses added</p>
-            )}
-          </div>
-          <button
-            onClick={() => router.push("/account")}
-            className="mt-5 mr-5 inline-block bg-black text-white px-5 py-3 text-xs font-medium uppercase tracking-wide hover:bg-gray-700"
-          >
-            Add new address
-          </button>
-          <div className="mt-6 border-t border-b py-2">
-            <div className="flex items-center justify-between">
-              <p className="text-sm font-medium text-gray-900">Subtotal</p>
-              <p className="text-lg font-bold text-gray-900">
-                $
-                {cartItems && cartItems.length
-                  ? cartItems.reduce(
-                      (total, item) => item.productID.price + total,
-                      0
-                    )
-                  : "0"}
-              </p>
+              )}
             </div>
-            <div className="flex items-center justify-between">
-              <p className="text-sm font-medium text-gray-900">Shipping</p>
-              <p className="text-lg font-bold text-gray-900">Free</p>
-            </div>
-            <div className="flex items-center justify-between">
-              <p className="text-sm font-medium text-gray-900">Total</p>
-              <p className="text-lg font-bold text-gray-900">
-                $
-                {cartItems && cartItems.length
-                  ? cartItems.reduce(
-                      (total, item) => item.productID.price + total,
-                      0
-                    )
-                  : "0"}
-              </p>
-            </div>
-            <div className="pb-10">
-              <button
-                disabled={
-                  (cartItems && cartItems.length === 0) ||
-                  Object.keys(checkoutFormData.shippingAddress).length === 0
-                }
-                onClick={handleCheckout}
-                className="disabled:opacity-50 mt-5 mr-5 w-full  inline-block bg-black text-white px-5 py-3 text-xs font-medium uppercase tracking-wide hover:bg-gray-700"
-              >
-                Checkout
-              </button>
-            </div>
+
+            <button
+              disabled={!cartItems?.length || !selectedAddress}
+              onClick={handleCheckout}
+              className={`w-full py-3 px-4 rounded-lg font-medium text-white transition-all ${
+                !cartItems?.length || !selectedAddress
+                  ? "bg-gray-400 cursor-not-allowed"
+                  : "bg-blue-600 hover:bg-blue-700 shadow-md hover:shadow-lg"
+              }`}
+            >
+              Proceed to Payment
+            </button>
           </div>
         </div>
       </div>
       <Notification />
-    </div>
+    </section>
   );
 }

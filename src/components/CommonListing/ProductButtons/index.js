@@ -94,7 +94,7 @@ export default function ProductButton({ item }) {
     <>
       <button
         onClick={() => handleAddToCart(item)}
-        className="mt-1.5 flex w-full justify-center bg-black px-5 py-3 text-xs font-medium uppercase tracking-wide text-white hover:bg-gray-700"
+        className="mt-1.5 flex rounded-md w-full justify-center bg-black px-5 py-3 text-xs font-medium uppercase tracking-wide text-white hover:bg-gray-700"
       >
         {componentLevelLoader &&
         componentLevelLoader.loading &&

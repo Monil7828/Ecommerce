@@ -88,3 +88,10 @@ body::-webkit-scrollbar-thumb {
   background-color: #6366f1;
   animation: underlineSlide 1s infinite ease-in-out;
 }
+
+.cart-count {
+  transition: transform 0.2s ease-in-out;
+}
+.cart-count.changed {
+  transform: scale(1.2);
+}
