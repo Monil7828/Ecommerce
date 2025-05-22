@@ -126,7 +126,7 @@ export default function Account() {
         {/* Profile Card */}
         <div className="bg-white rounded-2xl shadow-xl overflow-hidden max-w-5xl mx-auto">
           {/* Profile Header with gradient */}
-          <div className="bg-gradient-to-r from-blue-600 to-indigo-700 p-8 text-white">
+          <div className="bg-gradient-to-r from-indigo-600 to-purple-600 p-8 text-white">
             <div className="flex flex-col md:flex-row items-center">
               <div className="w-28 h-28 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center mb-6 md:mb-0 md:mr-8 border-2 border-white/30">
                 <span className="text-4xl font-bold text-white">
@@ -149,8 +149,8 @@ export default function Account() {
             <div className="flex flex-wrap gap-4 mb-10">
               <button
                 onClick={() => router.push('/orders')}
-                className="flex-1 min-w-[200px] bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white px-6 py-3 rounded-xl transition-all flex items-center justify-center shadow-md hover:shadow-lg"
-              >
+                className="flex-1 min-w-[200px] bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white px-6 py-3 rounded-xl transition-all flex items-center justify-center shadow-md hover:shadow-lg"
+              > 
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
                 </svg>
@@ -174,7 +174,7 @@ export default function Account() {
                 <h2 className="text-2xl font-bold text-gray-800">Your Addresses</h2>
                 <button
                   onClick={() => setShowAddressForm(!showAddressForm)}
-                  className="px-5 py-2.5 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-xl hover:from-blue-600 hover:to-blue-700 transition-all shadow-md hover:shadow-lg flex items-center"
+                  className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 transition-all shadow-md hover:shadow-lg flex items-center"
                 >
                   {showAddressForm ? (
                     <>
@@ -299,7 +299,7 @@ export default function Account() {
                   </button>
                   <button
                     onClick={handleAddOrUpdateAddress}
-                    className="px-5 py-2.5 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-xl hover:from-blue-600 hover:to-blue-700 transition-all font-medium shadow-md hover:shadow-lg flex items-center"
+                    className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 transition-all font-medium shadow-md hover:shadow-lg flex items-center"
                   >
                     {componentLevelLoader?.loading ? (
                       <PulseLoader color="#ffffff" size={8} />

@@ -28,7 +28,7 @@ function LayoutBody({ children }) {
   return (
     <>
       <Navbar />
-      <main className="relative flex bg-slate-200 min-h-screen flex-col mt-[80px]">
+      <main className="relative flex bg-gray-50 min-h-screen flex-col mt-[80px]">
         {pageLoading && <FullPageLoader />}
         {children}
       </main>

@@ -149,7 +149,7 @@ export default function AdminAddNewProduct() {
 
   return (
     <div className="w-full mt-0 mr-0 mb-0 ml-0 relative">
-      <div className="flex flex-col text-black items-start justify-start p-10 bg-slate-300 shadow-2xl rounded-xl relative">
+      <div className="flex flex-col text-black items-start justify-start p-10 bg-gray-50 shadow-2xl rounded-xl relative">
         <div className="w-full mt-6 mr-0 mb-0 ml-0 space-y-8">
           <input
             accept="image/*"
