@@ -152,7 +152,7 @@ export default function ProductButton({ item }) {
             Add to Cart
           </>
         )}
-      </button>
+      </button> 
     </div>
   );
 }

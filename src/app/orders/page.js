@@ -109,9 +109,12 @@ export default function Orders() {
                         >
                           <div className="h-24 w-24 rounded-lg overflow-hidden border border-gray-200 transition-all duration-300 group-hover:shadow-md cursor-pointer">
                             <img
-                              alt={orderItem.product.name}
+                              alt={orderItem.product?.name || "Product image"}
                               className="h-full w-full object-cover"
-                              src={orderItem.product.imageUrl}
+                              src={
+                                orderItem.product?.imageUrl ||
+                                "/placeholder.jpg"
+                              } 
                             />
                           </div>
                           <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-10 transition-all duration-300 rounded-lg" />

@@ -141,11 +141,11 @@ export default function CommonCart({
                 <div className="space-y-4">
                   <div className="flex justify-between">
                     <span className="text-gray-600">Subtotal</span>
-                    <span className="font-medium">${subtotal.toFixed(2)}</span>
+                    <span className="font-medium text-gray-600">${subtotal.toFixed(2)}</span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-gray-600">Shipping</span>
-                    <span className="font-medium">Free</span>
+                    <span className="font-medium text-green-600">Free</span>
                   </div>
                   <div className="flex justify-between text-lg font-bold pt-4 border-t border-gray-200">
                     <span>Total</span>

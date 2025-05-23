@@ -5,6 +5,7 @@ import { GlobalContext } from "@/context";
 import { getAllOrdersForAllUsers, updateStatusOfOrder } from "@/services/order";
 import { useContext, useEffect, useState } from "react";
 import { PulseLoader } from "react-spinners";
+import { useRouter } from "next/navigation";
 
 export default function AdminView() {
   const {
@@ -55,17 +56,17 @@ export default function AdminView() {
     }
   }
 
- const filteredOrders = allOrdersForAllUsers
-  ?.filter((order) => {
-    const searchLower = searchTerm.toLowerCase();
-    return (
-      order._id.toLowerCase().includes(searchLower) ||
-      order.user.name.toLowerCase().includes(searchLower) ||
-      order.user.email.toLowerCase().includes(searchLower) ||
-      order.totalPrice.toString().includes(searchTerm)
-    );
-  })
-  .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+  const filteredOrders = allOrdersForAllUsers
+    ?.filter((order) => {
+      const searchLower = searchTerm.toLowerCase();
+      return (
+        order._id.toLowerCase().includes(searchLower) ||
+        order.user.name.toLowerCase().includes(searchLower) ||
+        order.user.email.toLowerCase().includes(searchLower) ||
+        order.totalPrice.toString().includes(searchTerm)
+      );
+    })
+    .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
 
   if (pageLevelLoader) {
     return (
@@ -247,7 +248,7 @@ export default function AdminView() {
                       )}
 
                       <button
-                        onClick={() => router.push(`/orders/${item._id}`)}
+                        onClick={() => router.push(`/admin/orders/${item._id}`)}
                         className="flex-1 sm:flex-none px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50"
                       >
                         View Details

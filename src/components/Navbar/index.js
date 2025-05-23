@@ -23,7 +23,7 @@ function LoginPromptModal({ open, setOpen, onLoginClick }) {
       show={open}
       setShow={setOpen}
       mainContent={
-        <div className="p-4 text-center">
+        <div className="p-4 text-center pt-20">
           <h3 className="text-lg font-medium text-gray-900 mb-2">
             Login Required
           </h3>
