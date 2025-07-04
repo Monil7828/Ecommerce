@@ -183,7 +183,7 @@ export default function Home() {
               {
                 name: "Men",
                 image:
-                  "https://forgecraftmensjewelry.com/cdn/shop/articles/minimalist-mens-fashion-beige-shirt-and-trousers.jpg?v=1737391858&width=1100",
+                  "https://static.vecteezy.com/system/resources/previews/048/990/880/large_2x/stylish-male-fashion-model-in-a-trendy-jacket-male-dress-environmalet-with-abright-yellow-male-background-perfect-for-afashion-portrait-and-lifestyle-males-vibe-free-photo.jpg",
                 path: "/product/listing/men",
               },
               {
